@@ -2,7 +2,8 @@ import WebSocket from "ws";
 import zlib from "zlib";
 import BigNumber from "bignumber.js";
 
-function createWSHandlerPriceposition, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO1_DIVAP) {
+
+function createWSHandlerPrice(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO1_DIVAP) {
   let socket;
   let receivedMessage = "";
   let targetHitShort = false;

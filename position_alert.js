@@ -9,7 +9,7 @@ function createWSHandlerAlert(PATH) {
   const PATH_WS = "wss://app.notabrasil.com.br/test_divap";
 
   function init() {
-    socket = new WebSocket(path);
+    socket = new WebSocket(PATH_WS);
     socket.on('open', onOpen);
     socket.on('message', onMessage);
     socket.on('error', onError);

@@ -1,5 +1,6 @@
 import CryptoJS from "crypto-js";
 import axios from "axios";
+import BigNumber from "bignumber.js";
 
 const MINUS_RANGE = BigNumber(0.9997)
 const PLUS_RANGE = BigNumber(1.0007)
@@ -8,6 +9,8 @@ const USDT_RISK = BigNumber(1.5)
 const PERC_TP_ALVO2 = BigNumber(0.8)
 const PERC_TP = BigNumber(0.5)
 
+
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
 const API_ALERT_DIVAP = {
   "uri": "/alert/open",
@@ -148,4 +151,4 @@ async function divapAlertApi(protocol, host, path, method, payload) {
 }
 
 
-export { getSymbol, bingXOpenApi, divapAlertApi, getParameters, API, API_POSITION, API_OPEN_ORDERS, API_CANCELREPLACE, API_LEVERAGE, MINUS_RANGE, PLUS_RANGE, API_ALERT_DIVAP, API_ALERT_DIVAP_UPDATE, USDT_RISK, ALVO1, PERC_TP, PERC_TP_ALVO2 } 
+export { sleep, getSymbol, bingXOpenApi, divapAlertApi, getParameters, API, API_POSITION, API_OPEN_ORDERS, API_CANCELREPLACE, API_LEVERAGE, MINUS_RANGE, PLUS_RANGE, API_ALERT_DIVAP, API_ALERT_DIVAP_UPDATE, USDT_RISK, ALVO1, PERC_TP, PERC_TP_ALVO2 } 

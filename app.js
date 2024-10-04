@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import BigNumber from "bignumber.js";
 import createWSHandlerPrice from "./position_price.js";
 import createWSHandlerAlert from "./position_alert.js";
-import { bingXOpenApi, divapAlertApi, API, API_POSITION, API_OPEN_ORDERS, API_CANCELREPLACE, MINUS_RANGE, PLUS_RANGE, API_ALERT_DIVAP, API_ALERT_DIVAP_UPDATE, ALVO1 } from "./utils.js";
-import trades from "./trade.js";
+import { sleep, bingXOpenApi, divapAlertApi, API, API_POSITION, API_OPEN_ORDERS, API_CANCELREPLACE, MINUS_RANGE, PLUS_RANGE, API_ALERT_DIVAP, API_ALERT_DIVAP_UPDATE, ALVO1 } from "./utils.js";
+import openTrades from "./trade.js";
 
 function getNewWSHandlerPrice(position, stopLoss) {
   const webSocketHandler = new createWSHandlerPrice(position, stopLoss, MINUS_RANGE, PLUS_RANGE, ALVO1);
@@ -28,7 +28,7 @@ async function main() {
 
     let resp = await bingXOpenApi(API_POSITION.protocol, process.env.HOST, API_POSITION.uri, API_POSITION.method, null, process.env.API_KEY, process.env.API_SECRET)
     console.log(resp.data)
-    await positions.map((position) => {
+    positions.map((position) => {
       position.live = false
     })
 
@@ -52,7 +52,7 @@ async function main() {
           position = {
             symbol: item.symbol,
             position: item,
-            web_socket: getNewWebSocket(item, stop_order),
+            web_socket: getNewWSHandlerPrice(item, stop_order),
             stop_order: stop_order,
           }
           positions.push(position)
@@ -63,7 +63,7 @@ async function main() {
         position.live = true
       })
 
-      await positions.map((position) => {
+      positions.map((position) => {
         if (!position.live) {
           position.web_socket.getSocket().close()
         }
@@ -120,7 +120,7 @@ async function main() {
 
       await sleep(1000 * 5)
 
-      await trades(alert, obj, uri)
+      await openTrades(alert, obj, uri, positions)
 
     }
 
@@ -164,7 +164,7 @@ async function setStopOnEntry(position) {
     }
     // alert.open_trade_long_alvo1 = resp.data
     // await divapAlertApi(API_ALERT_DIVAP.protocol, process.env.HOST_ALERT_DIVAP, uri, API_ALERT_DIVAP_UPDATE.method, alert)
-  } else {
+  } else if (position.position.positionSide == "SHORT") {
     let payload = getPayloadStopEntradaShortAlvo1(position)
     if (position.stop_order) {
       let resp = await bingXOpenApi(API_CANCELREPLACE.protocol, process.env.HOST, API_CANCELREPLACE.uri, API_CANCELREPLACE.method, payload, process.env.API_KEY, process.env.API_SECRET)
@@ -194,6 +194,27 @@ function getPayloadStopEntradaLongAlvo1(position) {
   }
   return payload
 }
+
+function getPayloadStopEntradaShortAlvo1(position) {
+
+  let payload = {
+    "symbol": position.position.symbol,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "type": "STOP_MARKET",
+    "price": position.position.avgPrice,
+    "stopPrice": position.position.avgPrice,
+    "quantity": position.position.availableAmt,
+  }
+  if (position.stop_order) {
+    const orderId = BigInt(position.stop_order.orderId)
+    payload.cancelReplaceMode = "STOP_ON_FAILURE"
+    payload.cancelOrderId = orderId
+  }
+  return payload
+}
+
+
 
 dotenv.config()
 const wsHandlerAlert = getNewWSHandlerAlert()
