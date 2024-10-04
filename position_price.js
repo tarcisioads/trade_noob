@@ -2,16 +2,11 @@ import WebSocket from "ws";
 import zlib from "zlib";
 import BigNumber from "bignumber.js";
 
-function createWebSocketHandler(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO1_DIVAP) {
+function createWSHandlerPriceposition, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO1_DIVAP) {
   let socket;
   let receivedMessage = "";
   let targetHitShort = false;
   let targetHitLong = false;
-  console.log("position:", position)
-  console.log("stopOrder:", stopOrder)
-  console.log("MINUS_RANGE:", MINUS_RANGE)
-  console.log("PLUS_RANGE:", PLUS_RANGE)
-  console.log("ALVO1_DIVAP:", ALVO1_DIVAP)
 
   const path = "wss://open-api-swap.bingx.com/swap-market";
   const CHANNEL = {
@@ -101,4 +96,4 @@ function createWebSocketHandler(position, stopOrder, MINUS_RANGE, PLUS_RANGE, AL
   };
 }
 
-export default createWebSocketHandler;
+export default createWSHandlerPrice;
