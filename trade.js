@@ -14,7 +14,7 @@ async function openTrades(alert, obj, uri, positions) {
 
 
 async function trade_long(alert, obj, uri, positions) {
-  hasLongs = positions.filter((position) => position.live && position.symbol == getSymbol(obj.par) && position.position.positionSide == "LONG").length > 0
+  const hasLongs = positions.filter((position) => position.live && position.symbol == getSymbol(obj.par) && position.position.positionSide == "LONG").length > 0
   if (hasLongs)
     return
 
