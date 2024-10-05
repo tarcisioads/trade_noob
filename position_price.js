@@ -3,7 +3,7 @@ import zlib from "zlib";
 import BigNumber from "bignumber.js";
 
 
-function createWSHandlerPrice(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO1_DIVAP) {
+function createWSHandlerPrice(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO1) {
   let socket;
   let receivedMessage = "";
   let targetHitShort = false;
@@ -61,9 +61,8 @@ function createWSHandlerPrice(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO
       stopPrice = BigNumber(stopOrder.stopPrice)
     } 
     if (position.positionSide == "LONG") {
-      entryPrice = entryPrice.times(MINUS_RANGE).dp(5)
       let dif = entryPrice.minus(stopPrice)
-      let priceAlvo1 = entryPrice.plus(dif.times(ALVO1_DIVAP).dp(5)).times(MINUS_RANGE).dp(5).toNumber()
+      let priceAlvo1 = entryPrice.plus(dif.times(ALVO1).dp(5)).times(MINUS_RANGE).dp(5).toNumber()
       console.log(position.symbol, position.positionSide, currentPrice, priceAlvo1)
       if (currentPrice >= priceAlvo1) {
         targetHitLong = true
@@ -71,7 +70,7 @@ function createWSHandlerPrice(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO
     } else {
       entryPrice = entryPrice.times(PLUS_RANGE).dp(5)
       let dif = stopPrice.minus(entryPrice)
-      let priceAlvo1 = entryPrice.minus(dif.times(ALVO1_DIVAP).dp(5)).times(PLUS_RANGE).dp(5).toNumber()
+      let priceAlvo1 = entryPrice.minus(dif.times(ALVO1).dp(5)).times(PLUS_RANGE).dp(5).toNumber()
       console.log(position.positionSide, currentPrice, priceAlvo1)
       if (currentPrice <= priceAlvo1) {
         targetHitShort = true

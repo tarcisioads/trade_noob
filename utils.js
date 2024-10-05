@@ -20,6 +20,7 @@ const API_ALERT_DIVAP = {
 const API_ALERT_DIVAP_UPDATE = {
   "uri": "/alert",
   "method": "PUT",
+  "protocol": "https"
 }
 
 const API = {
@@ -55,8 +56,9 @@ const API_LEVERAGE = {
 
 
 function getSymbol(par) {
-  let symbol = par.replace("USDT.P,15", "-USDT")
-  symbol = symbol.replace("USDT.P,1H", "-USDT")
+  let symbol = par.replace(".P,15", "")
+  symbol = symbol.replace(".P,1H", "")
+  symbol = symbol.replace("USDT", "-USDT")
   symbol = symbol.replace("TON-USDT", "TONCOIN-USDT")
   return symbol
 }
@@ -151,4 +153,4 @@ async function divapAlertApi(protocol, host, path, method, payload) {
 }
 
 
-export { sleep, getSymbol, bingXOpenApi, divapAlertApi, getParameters, API, API_POSITION, API_OPEN_ORDERS, API_CANCELREPLACE, API_LEVERAGE, MINUS_RANGE, PLUS_RANGE, API_ALERT_DIVAP, API_ALERT_DIVAP_UPDATE, USDT_RISK, ALVO1, PERC_TP, PERC_TP_ALVO2 } 
+export { sleep, getSymbol, bingXOpenApi, divapAlertApi, getParameters, API, API_POSITION, API_OPEN_ORDERS, API_CANCELREPLACE, API_LEVERAGE, MINUS_RANGE, PLUS_RANGE, API_ALERT_DIVAP, API_ALERT_DIVAP_UPDATE, USDT_RISK, ALVO1, PERC_TP, PERC_TP_ALVO2  } 

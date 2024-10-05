@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { sleep, bingXOpenApi, divapAlertApi, getSymbol, API, API_LEVERAGE, API_ALERT_DIVAP_UPDATE, PERC_TP, PERC_TP_ALVO2 } from "./utils.js";
+import { sleep, bingXOpenApi, divapAlertApi, getSymbol, API, API_LEVERAGE, API_ALERT_DIVAP_UPDATE, MINUS_RANGE, PLUS_RANGE, PERC_TP, PERC_TP_ALVO2, USDT_RISK } from "./utils.js";
 
 async function openTrades(alert, obj, uri, positions) {
   if (obj.ls == "LONG") {
@@ -176,7 +176,7 @@ function getPayloadTakeProfitLongAlvo2(obj) {
   }
 
   let quantity = getQuantityLong(obj)
-  quantity = quantity.minus(quantity.times(PERC_TP).db(4)).times(PERC_TP_ALVO2).dp(4)
+  quantity = quantity.minus(quantity.times(PERC_TP).dp(4)).times(PERC_TP_ALVO2).dp(4)
 
   let payload = {
     "symbol": getSymbol(obj.par),
@@ -217,7 +217,7 @@ function getPayloadLongTrailingStop(obj) {
 
 
 function getQuantityShort(obj) {
-  const leverage = getLeverageShort(obj)
+  const leverage = gbetLeverageShort(obj)
   const percStop = obj.diff.div(obj.high)
   const margem = USDT_RISK.div(percStop.times(leverage))
   const quantity = margem.div(obj.low).times(leverage).dp(4)
@@ -325,7 +325,7 @@ function getPayloadShortTrailingStop(obj) {
 
 
 function getLeverageLong(obj) {
-  let leverage = BigNumber(1).div(obj.diff.div(obj.high));
+  let leverage = BigNumber(1).div(obj.diff.div(obj.close));
   leverage = leverage.minus(leverage.times(0.3))
   leverage = Math.ceil(leverage.toNumber())
   leverage = leverage > 50 ? 50 : leverage
@@ -350,7 +350,7 @@ function getPayloadLeverageLong(obj) {
 }
 
 function getLeverageShort(obj) {
-  let leverage = BigNumber(1).div(obj.diff.div(obj.high));
+  let leverage = BigNumber(1).div(obj.diff.div(obj.close));
   leverage = leverage.minus(leverage.times(0.2))
   leverage = Math.ceil(leverage.toNumber())
   leverage = leverage > 50 ? 50 : leverage

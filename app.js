@@ -178,13 +178,15 @@ async function setStopOnEntry(position) {
 }
 
 function getPayloadStopEntradaLongAlvo1(position) {
+  let entryPrice = BigNumber(position.position.avgPrice)
+  let stopPayTax = entryPrice.times(PLUS_RANGE).dp(5).toNumber()
   let payload = {
     "symbol": position.position.symbol,
     "side": "SELL",
     "positionSide": "LONG",
     "type": "STOP_MARKET",
-    "price": position.position.avgPrice.times(PLUS_RANGE).dp(5).toNumber(),
-    "stopPrice": position.position.avgPrice.times(PLUS_RANGE).dp(5).toNumber(),
+    "price": stopPayTax.toNumber(),
+    "stopPrice": stopPayTax.toNumber(),
     "quantity": position.position.availableAmt,
   }
   if (position.stop_order) {
@@ -196,14 +198,16 @@ function getPayloadStopEntradaLongAlvo1(position) {
 }
 
 function getPayloadStopEntradaShortAlvo1(position) {
-
+  let entryPrice = BigNumber(position.position.avgPrice)
+  let stopPayTax = entryPrice.times(MINUS_RANGE).dp(5).toNumber()
+ 
   let payload = {
     "symbol": position.position.symbol,
     "side": "BUY",
     "positionSide": "SHORT",
     "type": "STOP_MARKET",
-    "price": position.position.avgPrice,
-    "stopPrice": position.position.avgPrice,
+    "price": stopPayTax.toNumber(),
+    "stopPrice": stopPayTax.toNumber(),
     "quantity": position.position.availableAmt,
   }
   if (position.stop_order) {
