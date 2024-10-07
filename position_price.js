@@ -82,6 +82,7 @@ function createWSHandlerPrice(position, stopOrder, MINUS_RANGE, PLUS_RANGE, ALVO
 
   function onClose() {
     console.log("WebSocket closed");
+    init();
   }
 
   return {
