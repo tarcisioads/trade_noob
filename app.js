@@ -179,7 +179,7 @@ async function setStopOnEntry(position) {
 
 function getPayloadStopEntradaLongAlvo1(position) {
   let entryPrice = BigNumber(position.position.avgPrice)
-  let stopPayTax = entryPrice.times(PLUS_RANGE).dp(5).toNumber()
+  let stopPayTax = entryPrice.times(PLUS_RANGE).dp(5)
   let payload = {
     "symbol": position.position.symbol,
     "side": "SELL",
@@ -199,7 +199,7 @@ function getPayloadStopEntradaLongAlvo1(position) {
 
 function getPayloadStopEntradaShortAlvo1(position) {
   let entryPrice = BigNumber(position.position.avgPrice)
-  let stopPayTax = entryPrice.times(MINUS_RANGE).dp(5).toNumber()
+  let stopPayTax = entryPrice.times(MINUS_RANGE).dp(5)
  
   let payload = {
     "symbol": position.position.symbol,
